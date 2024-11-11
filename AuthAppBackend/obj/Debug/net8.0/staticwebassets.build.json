@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "PNEx2xdqoHXevwu5IAjVbZcSno4ktik92IM/GNmqJYo=",
+  "Source": "AuthAppBackend",
+  "BasePath": "_content/AuthAppBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
