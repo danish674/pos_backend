@@ -3,9 +3,12 @@ using AuthAppBackend.IService;
 using AuthAppBackend.ModelTemp;
 using AuthAppBackend.Service;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +39,6 @@ var _logger = new LoggerConfiguration()
 builder.Logging.AddSerilog(_logger);
 
 // Rate Limiting
-
 builder.Services.AddRateLimiter(x => x.AddFixedWindowLimiter(policyName: "fixedwindows", options =>
 {
     options.Window = TimeSpan.FromSeconds(10);
@@ -44,6 +46,29 @@ builder.Services.AddRateLimiter(x => x.AddFixedWindowLimiter(policyName: "fixedw
     options.QueueLimit = 0;
     options.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
 }));
+
+// JWT
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.Configure<JwtSettings>(jwtSettings);
+var authKey = builder.Configuration.GetValue<string>("JwtSettings:securityKey");
+builder.Services.AddAuthentication(item =>
+{
+    item.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    item.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(item =>
+{
+    item.RequireHttpsMetadata = true;
+    item.SaveToken = true;
+    item.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authKey)),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+
+    };
+});
 
 var app = builder.Build();
 
@@ -57,6 +82,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

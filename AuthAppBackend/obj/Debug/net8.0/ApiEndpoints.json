@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "AuthAppBackend.Controllers.AuthorizeController",
+    "Method": "GenerateToken",
+    "RelativePath": "api/Authorize/GenerateToken",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cred",
+        "Type": "AuthAppBackend.ModelTemp.UserCred",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "AuthAppBackend.Controllers.CustomerController",
     "Method": "Create",
     "RelativePath": "api/Customer/Create",

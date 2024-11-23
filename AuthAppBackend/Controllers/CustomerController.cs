@@ -1,12 +1,14 @@
 ﻿using AuthAppBackend.IService;
 using AuthAppBackend.ModelTemp;
 using AuthAppBackend.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace AuthAppBackend.Controllers
 {
+    [Authorize]
     [EnableRateLimiting("fixedwindows")]
     [Route("api/[controller]")]
     [ApiController]
